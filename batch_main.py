@@ -3,6 +3,9 @@ from pathlib import Path
 from agent.batch_runner import run_batch
 from models.batch import BatchItemStatus
 
+from renderers.batch_review_report_renderer import (
+    write_batch_review_report,
+)
 
 INPUT_DIRECTORY = Path(
     "input/requirements"
@@ -46,6 +49,17 @@ def main():
         input_directory=INPUT_DIRECTORY,
         output_root=OUTPUT_ROOT,
         project=DEFAULT_PROJECT,
+    )
+
+    run_output_directory = (
+    summary_file.parent
+    )
+
+    batch_review_report = (
+        write_batch_review_report(
+            summary=summary,
+            run_output_directory=run_output_directory,
+        )
     )
 
     # ---------------------------------------------------------
@@ -252,6 +266,11 @@ def main():
     print(
         "Batch Summary: "
         f"{summary_file}"
+    )
+
+    print(
+        "Batch Review Report: "
+        f"{batch_review_report}"
     )
 
     print(

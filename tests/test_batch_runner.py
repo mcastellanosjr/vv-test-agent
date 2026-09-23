@@ -179,3 +179,185 @@ def test_error_result_does_not_affect_averages():
         summary.average_ac_accountability_percent
         == 100.0
     )
+
+from unittest.mock import patch
+
+from agent.batch_runner import (
+    process_requirement_file,
+)
+from models.batch import BatchItemStatus
+
+
+def write_valid_requirement(
+    file_path,
+    requirement_id,
+):
+    file_path.write_text(
+        json.dumps(
+            {
+                "project": "ActiveConnect",
+                "requirement": {
+                    "requirement_id": requirement_id,
+                    "title": "Test Requirement",
+                    "text": (
+                        "The system shall perform "
+                        "the specified behavior."
+                    ),
+                    "acceptance_criteria": [
+                        {
+                            "id": "AC-01",
+                            "text": (
+                                "The specified behavior "
+                                "is observable."
+                            ),
+                        }
+                    ],
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def test_pipeline_failure_becomes_error_result(
+    tmp_path,
+):
+    input_file = (
+        tmp_path / "REQ-ERROR.json"
+    )
+
+    write_valid_requirement(
+        input_file,
+        "REQ-ERROR",
+    )
+
+    run_output_directory = (
+        tmp_path / "output"
+    )
+
+    with patch(
+        "agent.batch_runner.run_pipeline",
+        side_effect=RuntimeError(
+            "Cursor execution failed."
+        ),
+    ):
+        result = process_requirement_file(
+            input_file=input_file,
+            project="ActiveConnect",
+            run_output_directory=(
+                run_output_directory
+            ),
+        )
+
+    assert (
+        result.status
+        == BatchItemStatus.ERROR
+    )
+
+    assert (
+        result.requirement_id
+        == "REQ-ERROR"
+    )
+
+    assert (
+        result.error_type
+        == "RuntimeError"
+    )
+
+    assert (
+        result.error_message
+        == "Cursor execution failed."
+    )
+
+
+def test_processing_can_continue_after_pipeline_failure(
+    tmp_path,
+):
+    first_file = (
+        tmp_path / "REQ-001.json"
+    )
+
+    second_file = (
+        tmp_path / "REQ-002.json"
+    )
+
+    write_valid_requirement(
+        first_file,
+        "REQ-001",
+    )
+
+    write_valid_requirement(
+        second_file,
+        "REQ-002",
+    )
+
+    run_output_directory = (
+        tmp_path / "output"
+    )
+
+    call_count = 0
+
+    def simulated_pipeline(
+        project,
+        requirement,
+    ):
+        nonlocal call_count
+        call_count += 1
+
+        if (
+            requirement.requirement_id
+            == "REQ-001"
+        ):
+            raise RuntimeError(
+                "Simulated Cursor failure."
+            )
+
+        raise RuntimeError(
+            "Second requirement reached."
+        )
+
+    with patch(
+        "agent.batch_runner.run_pipeline",
+        side_effect=simulated_pipeline,
+    ):
+        first_result = (
+            process_requirement_file(
+                input_file=first_file,
+                project="ActiveConnect",
+                run_output_directory=(
+                    run_output_directory
+                ),
+            )
+        )
+
+        second_result = (
+            process_requirement_file(
+                input_file=second_file,
+                project="ActiveConnect",
+                run_output_directory=(
+                    run_output_directory
+                ),
+            )
+        )
+
+    assert call_count == 2
+
+    assert (
+        first_result.status
+        == BatchItemStatus.ERROR
+    )
+
+    assert (
+        first_result.error_message
+        == "Simulated Cursor failure."
+    )
+
+    assert (
+        second_result.status
+        == BatchItemStatus.ERROR
+    )
+
+    assert (
+        second_result.error_message
+        == "Second requirement reached."
+    )

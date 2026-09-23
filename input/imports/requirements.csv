@@ -1,0 +1,6 @@
+project,requirement_id,requirement_title,requirement_text,ac_id,ac_text
+ActiveConnect,GALAXY1-REQ-101,Session Timeout,"The system shall automatically sign out an inactive user after 5 minutes.",AC-01,"After 4 minutes of inactivity, the system displays the session timeout warning."
+ActiveConnect,GALAXY1-REQ-101,Session Timeout,"The system shall automatically sign out an inactive user after 5 minutes.",AC-02,"The warning allows the user to continue the session."
+ActiveConnect,GALAXY1-REQ-101,Session Timeout,"The system shall automatically sign out an inactive user after 5 minutes.",AC-03,"If the user remains inactive, the system automatically signs the user out after 5 minutes."
+ActiveConnect,GALAXY1-REQ-102,Health System Name Length,"The system shall limit the Health System name to a maximum of 40 characters.",AC-01,"The system allows a Health System name containing up to 40 characters."
+ActiveConnect,GALAXY1-REQ-102,Health System Name Length,"The system shall limit the Health System name to a maximum of 40 characters.",AC-02,"The system prevents a Health System name containing more than 40 characters from being accepted."

@@ -1,0 +1,22 @@
+{
+  "project": "ActiveConnect",
+  "requirement": {
+    "requirement_id": "GALAXY1-REQ-101",
+    "title": "Session Timeout",
+    "text": "The system shall automatically sign out an inactive user after 5 minutes.",
+    "acceptance_criteria": [
+      {
+        "id": "AC-01",
+        "text": "After 4 minutes of inactivity, the system displays the session timeout warning."
+      },
+      {
+        "id": "AC-02",
+        "text": "The warning allows the user to continue the session."
+      },
+      {
+        "id": "AC-03",
+        "text": "If the user remains inactive, the system automatically signs the user out after 5 minutes."
+      }
+    ]
+  }
+}

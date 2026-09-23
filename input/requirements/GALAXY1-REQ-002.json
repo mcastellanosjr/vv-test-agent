@@ -1,0 +1,18 @@
+{
+    "project": "ActiveConnect",
+    "requirement": {
+      "requirement_id": "GALAXY1-REQ-002",
+      "title": "Health System Name Length",
+      "text": "The system shall limit the Health System name to a maximum of 40 characters.",
+      "acceptance_criteria": [
+        {
+          "id": "AC-01",
+          "text": "The system allows a Health System name containing up to 40 characters."
+        },
+        {
+          "id": "AC-02",
+          "text": "The system prevents a Health System name containing more than 40 characters from being accepted."
+        }
+      ]
+    }
+  }

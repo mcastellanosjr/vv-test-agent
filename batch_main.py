@@ -7,6 +7,10 @@ from renderers.batch_review_report_renderer import (
     write_batch_review_report,
 )
 
+from renderers.batch_traceability_renderer import (
+    write_batch_traceability_matrix,
+)
+
 INPUT_DIRECTORY = Path(
     "input/requirements"
 )
@@ -59,6 +63,13 @@ def main():
         write_batch_review_report(
             summary=summary,
             run_output_directory=run_output_directory,
+        )
+    )
+
+    batch_traceability = (
+    write_batch_traceability_matrix(
+        summary=summary,
+        run_output_directory=run_output_directory,
         )
     )
 
@@ -271,6 +282,11 @@ def main():
     print(
         "Batch Review Report: "
         f"{batch_review_report}"
+    )
+
+    print(
+        "Batch Traceability: "
+        f"{batch_traceability}"
     )
 
     print(

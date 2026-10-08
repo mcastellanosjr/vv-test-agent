@@ -1,0 +1,90 @@
+{
+    "project": "ActiveConnect",
+    "requirement": {
+      "requirement_id": "GALAXY1-REQ-001",
+      "title": "Session Timeout",
+      "text": "The system shall automatically sign out an inactive user after 5 minutes.",
+      "acceptance_criteria": [
+        {
+          "id": "AC-01",
+          "text": "After 4 minutes of inactivity, the system displays the session timeout warning."
+        },
+        {
+          "id": "AC-02",
+          "text": "The warning allows the user to continue the session."
+        },
+        {
+          "id": "AC-03",
+          "text": "If the user remains inactive, the system automatically signs the user out after 5 minutes."
+        }
+      ]
+    },
+    "supplied_scenarios": {
+      "scenarios": [
+        {
+          "source_scenario_id": "SRC-001",
+          "title": "Display session timeout warning",
+          "description": "Verify that an authenticated user receives the session timeout warning after 4 minutes of inactivity.",
+          "preconditions": [
+            "The user is authenticated."
+          ],
+          "actions": [
+            "Leave the session inactive for 4 minutes."
+          ],
+          "expected_results": [
+            "The session timeout warning is displayed."
+          ],
+          "requirement_ids": [
+            "GALAXY1-REQ-001"
+          ],
+          "acceptance_criteria_ids": [
+            "AC-01"
+          ],
+          "source": "manual"
+        },
+        {
+          "source_scenario_id": "SRC-002",
+          "title": "Continue the session",
+          "description": "Verify that the user can continue the session from the timeout warning.",
+          "preconditions": [
+            "The user is authenticated.",
+            "The session timeout warning is displayed."
+          ],
+          "actions": [
+            "Use the warning's continue-session action."
+          ],
+          "expected_results": [
+            "The user can continue the session."
+          ],
+          "requirement_ids": [
+            "GALAXY1-REQ-001"
+          ],
+          "acceptance_criteria_ids": [
+            "AC-02"
+          ],
+          "source": "manual"
+        },
+        {
+          "source_scenario_id": "SRC-003",
+          "title": "Automatic sign-out after inactivity",
+          "description": "Verify that the system signs out an inactive user after 5 minutes.",
+          "preconditions": [
+            "The user is authenticated."
+          ],
+          "actions": [
+            "Leave the session inactive for 5 minutes."
+          ],
+          "expected_results": [
+            "The system automatically signs the user out."
+          ],
+          "requirement_ids": [
+            "GALAXY1-REQ-001"
+          ],
+          "acceptance_criteria_ids": [
+            "AC-03"
+          ],
+          "source": "manual"
+        }
+      ]
+    }
+  }
